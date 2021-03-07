@@ -1,133 +1,166 @@
 #!/bin/bash
 
-# Grub2 Theme
+#/**
+# * ChrisTechTips Grub2 Theme Installer
+# *
+# * @license MIT
+# * @author  "Chris Titus" <contact@christitus.com>
+# * @author  "Matthias Morin" <mat@tangoman.io>
+# * @version 1.0.0
+# * @link    https://youtu.be/BAyzHP1Cqb0
+# */
 
-ROOT_UID=0
-THEME_DIR="/usr/share/grub/themes"
-PS3='Choose The Theme You Want: '
-themes=("Vimix" "Cyberpunk" "Shodan" "fallout" "CyberRe" "Quit")
-select THEME_NAME in "${themes[@]}"; do
-	case $THEME_NAME in
-	  "Vimix")
-		echo "Installing Vimix to Boot"
-		break
-		;;
-	  "Cyberpunk")
-		echo "Installing Cyberpunk to Boot"
-		break
-		;;
-	  "Shodan")
-		echo "Installing Shodan to Boot"
-		break
-		;;
-	  "fallout")
-		echo "Installing fallout to Boot"
-		break
-		;;
-	  "CyberRe")
-		echo "Installing CyberRe to Boot"
-		break
-		;;
-	  "Quit")
-	  	echo "User requested exit"
-		exit
-		;;
-          *) echo "invalid option $REPLY";;
-    esac
-done
+THEME_DIR='/usr/share/grub/themes'
+THEME_NAME=''
 
-MAX_DELAY=20                                        # max delay for user to enter root password
+function echo_title() {     echo -ne "\033[1;44;37m${*}\033[0m\n"; }
+function echo_caption() {   echo -ne "\033[0;1;44m${*}\033[0m\n"; }
+function echo_bold() {      echo -ne "\033[0;1;34m${*}\033[0m\n"; }
+function echo_danger() {    echo -ne "\033[0;31m${*}\033[0m\n"; }
+function echo_success() {   echo -ne "\033[0;32m${*}\033[0m\n"; }
+function echo_warning() {   echo -ne "\033[0;33m${*}\033[0m\n"; }
+function echo_secondary() { echo -ne "\033[0;34m${*}\033[0m\n"; }
+function echo_info() {      echo -ne "\033[0;35m${*}\033[0m\n"; }
+function echo_primary() {   echo -ne "\033[0;36m${*}\033[0m\n"; }
+function echo_error() {     echo -ne "\033[0;1;31merror:\033[0;31m\t${*}\033[0m\n"; }
+function echo_label() {     echo -ne "\033[0;1;32m${*}:\033[0m\t"; }
+function echo_prompt() {    echo -ne "\033[0;36m${*}\033[0m "; }
 
-#COLORS
-CDEF=" \033[0m"                                     # default color
-CCIN=" \033[0;36m"                                  # info color
-CGSC=" \033[0;32m"                                  # success color
-CRER=" \033[0;31m"                                  # error color
-CWAR=" \033[0;33m"                                  # waring color
-b_CDEF=" \033[1;37m"                                # bold default color
-b_CCIN=" \033[1;36m"                                # bold info color
-b_CGSC=" \033[1;32m"                                # bold success color
-b_CRER=" \033[1;31m"                                # bold error color
-b_CWAR=" \033[1;33m"                                # bold warning color
-
-# echo like ...  with  flag type  and display message  colors
-prompt () {
-  case ${1} in
-    "-s"|"--success")
-      echo -e "${b_CGSC}${@/-s/}${CDEF}";;          # print success message
-    "-e"|"--error")
-      echo -e "${b_CRER}${@/-e/}${CDEF}";;          # print error message
-    "-w"|"--warning")
-      echo -e "${b_CWAR}${@/-w/}${CDEF}";;          # print warning message
-    "-i"|"--info")
-      echo -e "${b_CCIN}${@/-i/}${CDEF}";;          # print info message
-    *)
-    echo -e "$@"
-    ;;
-  esac
+function splash() {
+    local hr
+    hr=" **$(printf "%${#1}s" | tr ' ' '*')** "
+    echo_title "${hr}"
+    echo_title " * $1 * "
+    echo_title "${hr}"
+    echo
 }
 
-# Welcome message
-prompt -s "\n\t*************************\n\t*  ${THEME_NAME} - Grub2 Theme  *\n\t*************************"
-
-# Check command avalibility
-function has_command() {
-  command -v $1 > /dev/null
-}
-
-prompt -w "\nChecking for root access...\n"
-
-# Checking for root access and proceed if it is present
-if [ "$UID" -eq "$ROOT_UID" ]; then
-
-  # Create themes directory if not exists
-  prompt -i "\nChecking for the existence of themes directory...\n"
-  [[ -d ${THEME_DIR}/${THEME_NAME} ]] && rm -rf ${THEME_DIR}/${THEME_NAME}
-  mkdir -p "${THEME_DIR}/${THEME_NAME}"
-
-  # Copy theme
-  prompt -i "\nInstalling ${THEME_NAME} theme...\n"
-
-  cp -a themes/${THEME_NAME}/* ${THEME_DIR}/${THEME_NAME}
-
-  # Set theme
-  prompt -i "\nSetting ${THEME_NAME} as default...\n"
-
-  # Backup grub config
-  cp -an /etc/default/grub /etc/default/grub.bak
-
-  grep "GRUB_THEME=" /etc/default/grub 2>&1 >/dev/null && sed -i '/GRUB_THEME=/d' /etc/default/grub
-
-  echo "GRUB_THEME=\"${THEME_DIR}/${THEME_NAME}/theme.txt\"" >> /etc/default/grub
-
-  # Update grub config
-  echo -e "Updating grub config..."
-  if has_command update-grub; then
-    update-grub
-  elif has_command grub-mkconfig; then
-    grub-mkconfig -o /boot/grub/grub.cfg
-  elif has_command grub2-mkconfig; then
-    if has_command zypper; then
-      grub2-mkconfig -o /boot/grub2/grub.cfg
-    elif has_command dnf; then
-      grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
+function check_root() {
+    # Checking for root access and proceed if it is present
+    ROOT_UID=0
+    if [[ ! "${UID}" -eq "${ROOT_UID}" ]]; then
+        # Error message
+        echo_error 'Run me as root.'
+        echo_info 'try sudo ./install.sh'
+        exit 1
     fi
-  fi
+}
 
-  # Success message
-  prompt -s "\n\t          ***************\n\t          *  All done!  *\n\t          ***************\n"
+function select_theme() {
+    themes=('Vimix' 'Cyberpunk' 'Shodan' 'fallout' 'CyberRe' 'Quit')
 
-else
+    PS3=$(echo_prompt '\nChoose The Theme You Want: ')
+    select THEME_NAME in "${themes[@]}"; do
+        case "${THEME_NAME}" in
+            'Vimix')
+                splash 'Installing Vimix Theme'
+                break;;
+            'Cyberpunk')
+                splash 'Installing Cyberpunk Theme'
+                break;;
+            'Shodan')
+                splash 'Installing Shodan Theme'
+                break;;
+            'fallout')
+                splash 'Installing fallout Theme'
+                break;;
+            'CyberRe')
+                splash 'Installing CyberRe Theme'
+                break;;
+            'Quit')
+                echo_info 'User requested exit'
+                exit 0;;
+            *) echo_warning "invalid option \"${REPLY}\"";;
+        esac
+    done
+}
 
-  # Error message
-  prompt -e "\n [ Error! ] -> Run me as root "
+function backup() {
+    # Backup grub config
+    echo_info 'cp -an /etc/default/grub /etc/default/grub.bak'
+    cp -an /etc/default/grub /etc/default/grub.bak
+}
 
-  # persisted execution of the script as root
-  read -p "[ trusted ] specify the root password : " -t${MAX_DELAY} -s
-  [[ -n "$REPLY" ]] && {
-    sudo -S <<< $REPLY $0
-  } || {
-    prompt  "\n Operation canceled  Bye"
-    exit 1
-  }
-fi
+function install_theme() {
+    # create themes directory if not exists
+    if [[ ! -d "${THEME_DIR}/${THEME_NAME}" ]]; then
+        # Copy theme
+        echo_primary "Installing ${THEME_NAME} theme..."
+
+        echo_info "mkdir -p \"${THEME_DIR}/${THEME_NAME}\""
+        mkdir -p "${THEME_DIR}/${THEME_NAME}"
+
+        echo_info "cp -a ./themes/\"${THEME_NAME}\"/* \"${THEME_DIR}/${THEME_NAME}\""
+        cp -a ./themes/"${THEME_NAME}"/* "${THEME_DIR}/${THEME_NAME}"
+    fi
+}
+
+function config_grub() {
+    # Set theme
+    echo_primary "Setting ${THEME_NAME} as default..."
+
+    if grep -q "GRUB_THEME=" /etc/default/grub; then
+        # remove theme configuration from grub
+        echo_info "sed -i '/GRUB_THEME=/d' /etc/default/grub"
+        sed -i '/GRUB_THEME=/d' /etc/default/grub
+    fi
+
+    # print new configuration to grub
+    echo_info "echo \"GRUB_THEME=\"${THEME_DIR}/${THEME_NAME}/theme.txt\"\" >> /etc/default/grub"
+    echo "GRUB_THEME=\"${THEME_DIR}/${THEME_NAME}/theme.txt\"" >> /etc/default/grub
+
+    if grep -q "GRUB_TIMEOUT_STYLE=" /etc/default/grub; then
+        echo_info "sed -i '/GRUB_TIMEOUT_STYLE=/d' /etc/default/grub"
+        sed -i '/GRUB_TIMEOUT_STYLE=/d' /etc/default/grub
+    fi
+
+    echo_info "echo \'GRUB_TIMEOUT_STYLE=\"menu\"\' >> /etc/default/grub"
+    echo 'GRUB_TIMEOUT_STYLE="menu"' >> /etc/default/grub
+
+    if grep -q "GRUB_TIMEOUT=" /etc/default/grub; then
+        echo_info "sed -i '/GRUB_TIMEOUT=/d' /etc/default/grub"
+        sed -i '/GRUB_TIMEOUT=/d' /etc/default/grub
+    fi
+
+    echo_info "echo \'GRUB_TIMEOUT=\"10\"\' >> /etc/default/grub"
+    echo 'GRUB_TIMEOUT="10"' >> /etc/default/grub
+}
+
+function update_grub() {
+    # Update grub config
+    echo_primary 'Updating grub config...'
+    if [[ -x "$(command -v update-grub)" ]]; then
+        echo_info 'update-grub'
+        update-grub
+
+    elif [[ -x "$(command -v grub-mkconfig)" ]]; then
+        echo_info 'grub-mkconfig -o /boot/grub/grub.cfg'
+        grub-mkconfig -o /boot/grub/grub.cfg
+
+    elif [[ -x "$(command -v grub2-mkconfig)" ]]; then
+        if [[ -x "$(command -v zypper)" ]]; then
+            echo_info 'grub2-mkconfig -o /boot/grub2/grub.cfg'
+            grub2-mkconfig -o /boot/grub2/grub.cfg
+
+        elif [[ -x "$(command -v dnf)" ]]; then
+            echo_info 'grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg'
+            grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
+        fi
+    fi
+}
+
+function main() {
+    splash 'ChrisTechTips Grub2 Theme Installer'
+
+    check_root
+    select_theme
+
+    install_theme
+
+    config_grub
+    update_grub
+
+    echo_success 'All done !'
+}
+
+main
