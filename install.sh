@@ -10,7 +10,8 @@
 # * @link    https://youtu.be/BAyzHP1Cqb0
 # */
 
-THEME_DIR='/usr/share/grub/themes'
+#THEME_DIR='/usr/share/grub/themes'
+THEME_DIR='/boot/grub/themes'
 THEME_NAME=''
 
 function echo_title() {     echo -ne "\033[1;44;37m${*}\033[0m\n"; }
