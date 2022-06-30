@@ -10,7 +10,8 @@
 # * @link    https://youtu.be/BAyzHP1Cqb0
 # */
 
-THEME_DIR='/usr/share/grub/themes'
+#THEME_DIR='/usr/share/grub/themes'
+THEME_DIR='/boot/grub/themes'
 THEME_NAME=''
 
 function echo_title() {     echo -ne "\033[1;44;37m${*}\033[0m\n"; }
@@ -123,6 +124,16 @@ function config_grub() {
 
     echo_info "echo \"GRUB_THEME=\"${THEME_DIR}/${THEME_NAME}/theme.txt\"\" >> /etc/default/grub"
     echo "GRUB_THEME=\"${THEME_DIR}/${THEME_NAME}/theme.txt\"" >> /etc/default/grub
+    
+    #--------------------------------------------------
+
+    echo_primary 'Setting grub graphics mode to auto'
+    # remove default timeout if any
+    echo_info "sed -i '/GRUB_GFXMODE=/d' /etc/default/grub"
+    sed -i '/GRUB_GFXMODE=/d' /etc/default/grub
+
+    echo_info "echo 'GRUB_GFXMODE=\"auto\"' >> /etc/default/grub"
+    echo 'GRUB_GFXMODE="auto"' >> /etc/default/grub   
 }
 
 function update_grub() {
