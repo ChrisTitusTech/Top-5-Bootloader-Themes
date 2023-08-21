@@ -54,25 +54,25 @@ function select_theme() {
     select THEME_NAME in "${themes[@]}"; do
         case "${THEME_NAME}" in
             'Vimix')
-                splash 'Installing Vimix Theme'
+                splash 'Installing Vimix Theme...'
                 break;;
             'Cyberpunk')
-                splash 'Installing Cyberpunk Theme'
+                splash 'Installing Cyberpunk Theme...'
                 break;;
             'Shodan')
-                splash 'Installing Shodan Theme'
+                splash 'Installing Shodan Theme...'
                 break;;
             'fallout')
-                splash 'Installing fallout Theme'
+                splash 'Installing fallout Theme...'
                 break;;
             'CyberRe')
-                splash 'Installing CyberRe Theme'
+                splash 'Installing CyberRe Theme...'
                 break;;
             'minegrub-theme')
-                splash 'Installing Minecraft Theme'
+                splash 'Installing Minecraft Theme...'
                 break;;
             'Quit')
-                echo_info 'User requested exit'
+                echo_info 'User requested exit...!'
                 exit 0;;
             *) echo_warning "invalid option \"${REPLY}\"";;
         esac
@@ -110,13 +110,13 @@ function config_grub() {
 
     #--------------------------------------------------
 
-    echo_primary 'Setting grub timeout to 10 seconds'
+    echo_primary 'Setting grub timeout to 60 seconds'
     # remove default timeout if any
     echo_info "sed -i '/GRUB_TIMEOUT=/d' /etc/default/grub"
     sed -i '/GRUB_TIMEOUT=/d' /etc/default/grub
 
-    echo_info "echo 'GRUB_TIMEOUT=\"10\"' >> /etc/default/grub"
-    echo 'GRUB_TIMEOUT="10"' >> /etc/default/grub
+    echo_info "echo 'GRUB_TIMEOUT=\"60\"' >> /etc/default/grub"
+    echo 'GRUB_TIMEOUT="60"' >> /etc/default/grub
 
     #--------------------------------------------------
 
@@ -163,7 +163,7 @@ function update_grub() {
 }
 
 function main() {
-    splash 'ChrisTechTips Grub2 Theme Installer'
+    splash 'The Matrix awaits you...'
 
     check_root
     select_theme
@@ -173,7 +173,7 @@ function main() {
     config_grub
     update_grub
 
-    echo_success 'All done !'
+    echo_success 'Boot Theme Update Successful!'
 }
 
 main
