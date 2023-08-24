@@ -1,6 +1,4 @@
 ![GH language](https://img.shields.io/github/languages/top/ChrisTitusTech/Top-5-Bootloader-Themes)
-[![GH tag](https://img.shields.io/github/v/tag/ChrisTitusTech/Top-5-Bootloader-Themes)](https://github.com/ChrisTitusTech/Top-5-Bootloader-Themes/tags)
-[![GH release](https://img.shields.io/github/v/release/ChrisTitusTech/Top-5-Bootloader-Themes)](https://github.com/ChrisTitusTech/Top-5-Bootloader-Themes/releases)
 ![GH license](https://img.shields.io/github/license/ChrisTitusTech/Top-5-Bootloader-Themes)
 ![GH stars](https://img.shields.io/github/stars/ChrisTitusTech/Top-5-Bootloader-Themes)
 ![Bash CI](https://github.com/ChrisTitusTech/Top-5-Bootloader-Themes/workflows/bash_unit%20CI/badge.svg)
