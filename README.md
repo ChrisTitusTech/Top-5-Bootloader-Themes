@@ -5,7 +5,6 @@
 ![GH stars](https://img.shields.io/github/stars/ChrisTitusTech/Top-5-Bootloader-Themes)
 ![Bash CI](https://github.com/ChrisTitusTech/Top-5-Bootloader-Themes/workflows/bash_unit%20CI/badge.svg)
 ![Shellcheck CI](https://github.com/ChrisTitusTech/Top-5-Bootloader-Themes/workflows/Shellcheck%20CI/badge.svg)
-![visitors](https://visitor-badge.glitch.me/badge?page_id=ChrisTitusTech.Top-5-Bootloader-Themes)
 
 ChrisTitusTech Top 5 Bootloader Themes
 ======================================
