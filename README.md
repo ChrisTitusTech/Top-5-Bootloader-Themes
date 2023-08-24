@@ -12,7 +12,7 @@ ChrisTitusTech Top 5 Bootloader Themes
 
 Install Bootloader Themes with ease.
 
-- Chris Titus Tech Channel : [https://www.youtube.com/user/homergfunk](https://www.youtube.com/user/homergfunk)
+- Chris Titus Tech Channel : [https://www.youtube.com/@christitustech](https://www.youtube.com/@christitustech)
 - Chris Titus Tech YouTube Video : [Bootloader Themes | Install & Configuration](https://www.youtube.com/watch?v=BAyzHP1Cqb0)
 - Full Walkthrough : [https://christitus.com/bootloader-themes](https://christitus.com/bootloader-themes)
 
