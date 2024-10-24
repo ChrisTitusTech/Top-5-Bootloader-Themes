@@ -105,6 +105,10 @@ function config_grub() {
     echo_info "sed -i '/GRUB_TIMEOUT_STYLE=/d' /etc/default/grub"
     sed -i '/GRUB_TIMEOUT_STYLE=/d' /etc/default/grub
 
+    # issue #16
+    echo_info "sed -i '/GRUB_TERMINAL_OUTPUT=/d' /etc/default/grub"
+    sed -i '/GRUB_TERMINAL_OUTPUT=/d' /etc/default/grub
+
     echo_info "echo 'GRUB_TIMEOUT_STYLE=\"menu\"' >> /etc/default/grub"
     echo 'GRUB_TIMEOUT_STYLE="menu"' >> /etc/default/grub
 
